@@ -10,7 +10,7 @@ Output binaries will be located in `./build/bin/target/boot500/boot/`
 
 ## Host Build
 ### MacTester
-On a mac, open `arcturus-sc-master/lib/Drivers/StructureCore/apps/mac/StructureCoreDriver/ST02-DevApps.xcodeproj` in Xcode
+On a mac, open `arcturus-sc-master/lib/Drivers/StructureCore/apps/mac/StructureCoreDriver/StructureCoreDriver.xcodeproj` in Xcode
 
 Edit the MacTester scheme and add this to "Arguments Passed On Launch"
 

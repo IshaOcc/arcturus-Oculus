@@ -1,0 +1,147 @@
+//
+//  ToolsShared.xcconfig
+//  Shared config for arcturus/tools.
+//
+//  Copyright (c) 2015-2016 Occipital, Inc. All rights reserved.
+
+//  Useful resource about .xcconfig
+//  http://pewpewthespells.com/blog/xcconfig_guide.html#includeStatements
+
+#include "../xcconfig/BaseConfig.xcconfig"
+
+// Note: This xcconfig gets included by projects under ARCTURUS/apps/,
+// making this path relative to those projects, not to this file.
+
+EIGEN = $(ARCTURUS_LOCATION)/ext/eigen3
+OCEIGEN_INCLUDES = $(ARCTURUS_LOCATION)/ext/OCEigen
+MINIPCL_INCLUDES = $(ARCTURUS_LOCATION)/ext/minipcl
+ZEROMQ_INCLUDES = $(ARCTURUS_LOCATION)/ext/zeromq/libzmq/include
+
+// By default, we include the bare minimum include paths (libs & Eigen).
+// Projects can include other dependencies from below, but should not re-define the include
+// paths (e.g. don't re-define G2O, just add it to your project's HEADER_SEARCH_PATHS)
+
+COMMON_SEARCH_PATHS = $(EIGEN) $(OCEIGEN_INCLUDES) $(ZEROMQ_INCLUDES) $(MINIPCL_INCLUDES) $(ARCTURUS_LOCATION)/lib $(ARCTURUS_LOCATION)/sdk/frameworks
+HEADER_SEARCH_PATHS = $(COMMON_SEARCH_PATHS)
+
+MTL_HEADER_SEARCH_PATHS = $(EIGEN) $(OCEIGEN_INCLUDES) $(MINIPCL_INCLUDES) $(ARCTURUS_LOCATION)/lib $(ARCTURUS_LOCATION)/sdk/frameworks
+
+G2O_INCLUDES = $(ARCTURUS_LOCATION)/ext/g2o
+GOOGLE = $(ARCTURUS_LOCATION)/ext/google
+OPENCV_ROOT = $(ARCTURUS_LOCATION)/ext/opencv/miniopencv
+OPENCV_INCLUDES = $(ARCTURUS_LOCATION)/ext/opencv $(OPENCV_ROOT)/include $(OPENCV_ROOT)/modules/core/include $(OPENCV_ROOT)/modules/calib3d/include $(OPENCV_ROOT)/modules/features2d/include $(OPENCV_ROOT)/modules/flann/include $(OPENCV_ROOT)/modules/imgproc/include $(OPENCV_ROOT)/modules/rgbd/include
+DVO = $(ARCTURUS_LOCATION)/ext/dvo
+DVO_INCLUDES = $(DVO)/dvo $(DVO)/dvo/dvo_core/include $(DVO)/dvo/dvo_slam/include
+
+SOPHUS_INCLUDES = $(ARCTURUS_LOCATION)/ext/sophus
+
+CERES = $(ARCTURUS_LOCATION)/ext/ceres-solver/
+CERES_INCLUDES = $(CERES)/include $(CERES)/config $(CERES)/internal/ceres/miniglog
+
+EDLINE_INCLUDES = $(ARCTURUS_LOCATION)/ext/LineBandDescriptor/
+
+// We need our C++ compiler to be C++11 compliant. Should be compiler default, but this is safer.
+// Useful: http://pewpewthespells.com/blog/buildsettings.html#clang_cxx_language_standard
+GCC_C_LANGUAGE_STANDARD = gnu99 // gnu99, gnu11, ..
+CLANG_CXX_LANGUAGE_STANDARD = gnu++14 // gnu++0x, gnu++14, ..
+CLANG_CXX_LIBRARY = libc++
+
+// Linking against Eigen with Static Libraries causes many warnings that cause zero problems at runtime
+GCC_SYMBOLS_PRIVATE_EXTERN = YES
+GCC_INLINES_ARE_PRIVATE_EXTERN = YES
+
+// We can probably omit this now, and trust Xcode.
+// ARCHS[sdk=iphoneos*] = armv7 armv7s arm64
+
+ENABLE_BITCODE = NO
+
+COMMON_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS) ARCTURUS=1
+GCC_PREPROCESSOR_DEFINITIONS = $(COMMON_PREPROCESSOR_DEFINITIONS)
+
+// Warning Configuration ------------------------------------------------------------------------------
+
+GCC_WARN_64_TO_32_BIT_CONVERSION = NO
+GCC_WARN_UNUSED_VALUE = YES
+GCC_WARN_UNUSED_VARIABLE = NO
+GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES
+GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR
+
+// C++ warnings
+// CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
+// GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES
+GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES
+GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
+CLANG_WARN_CXX0X_EXTENSIONS = YES
+
+// Xcode 8 Recommended Warnings:
+CLANG_WARN_BOOL_CONVERSION = YES // This can be overzealous if we use pointer comparisons to check for features
+CLANG_WARN_CONSTANT_CONVERSION = YES
+CLANG_WARN_ENUM_CONVERSION = YES
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_INT_CONVERSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+CLANG_WARN_UNREACHABLE_CODE = NO // we use if(0) often
+ENABLE_STRICT_OBJC_MSGSEND = YES
+GCC_NO_COMMON_BLOCKS = YES
+GCC_WARN_UNDECLARED_SELECTOR = YES
+GCC_WARN_UNUSED_FUNCTION = YES
+GCC_WARN_SIGN_COMPARE = NO // Turn this on sometimes to look for sign issues
+
+// Xcode 8.3 Recommended:
+CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+CLANG_WARN_EMPTY_BODY = YES;
+GCC_WARN_UNINITIALIZED_AUTOS = YES;
+
+// Xcode 9 Recommended:
+CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES; // <--> -Werror=block-capture-autoreleasing
+CLANG_WARN_COMMA = YES; // <--> -Wcomma
+CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES; // <--> -Werror=non-literal-null-conversion
+CLANG_WARN_OBJC_LITERAL_CONVERSION = YES; // <--> -Werror=objc-literal-conversion
+CLANG_WARN_RANGE_LOOP_ANALYSIS = YES; // <--> -Werror=range-loop-analysis
+CLANG_WARN_STRICT_PROTOTYPES = YES; // <--> -Werror=strict-prototypes
+
+// Xcode 10 Recommended:
+CLANG_ENABLE_OBJC_WEAK = YES;
+CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+
+// These are included below as well, so we can have them on Xcode 8.3.x
+XCODE_9_RECOMMENDED_WARNINGS = -Werror=strict-prototypes -Werror=objc-literal-conversion -Werror=block-capture-autoreleasing -Werror=non-literal-null-conversion -Werror=range-loop-analysis
+
+// Some other warnings it seems like we should enable soon:
+// CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+// GCC_WARN_SHADOW = YES;
+// GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+// GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+
+// Other warnings we could enable or disable (for reference):
+// Nice reference: https://github.com/boredzo/Warnings-xcconfig/blob/master/Warnings.xcconfig
+// -W(no-)deprecated-implementations
+// -W(no-)deprecated-declarations
+// -Werror=protocol // Warns about @required protocols not implemented
+
+WARN_BUT_SUPPRESS_ERROR = -Wno-error=documentation -Wno-error=nonportable-include-path -Wno-error=deprecated-declarations -Wno-error=unused-variable -Wno-error=unused-function -Wno-error=sign-compare -Wno-error=#warnings
+
+SHARED_WARNING_CFLAGS = $(inherited) -Werror=objc-method-access -Werror=atomic-property-with-user-defined-accessor -Werror=mismatched-return-types  $(XCODE_9_RECOMMENDED_WARNINGS) $(WARN_BUT_SUPPRESS_ERROR)
+WARNING_CFLAGS = $(SHARED_WARNING_CFLAGS)
+
+// Try turning this on to tackle more warnings:
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+
+// End Warning Configuration ------------------------------------------------------------------------------
+
+// By default, only generate DWARF, so we don't take extra time/energy building dSYM
+// We can still get the same debug quality even without dSYM as long as we still have
+// the related build products around in DerivedData (I believe this is how it works)
+// For public releases which we may want to debug later, dSYM makes sense.
+
+DEBUG_INFORMATION_FORMAT = dwarf
+
+// These deployment targets are the minimum OS level we still support
+// For iOS, we should make it the oldest version that has enough market share
+// and for macOS we should make it the newest version as soon as the team upgrades.
+
+// Generally these should stay 100% in sync between AppShared/LibShared/ToolsShared.xcconfig
+
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
+MACOSX_DEPLOYMENT_TARGET = 10.11
+

@@ -1,0 +1,27 @@
+//
+//  BaseConfig.xcconfig
+//
+//  Copyright (c) 2017 Occipital, Inc. All rights reserved.
+
+//  Useful resource about .xcconfig
+//  http://pewpewthespells.com/blog/xcconfig_guide.html#includeStatements
+
+
+// This is the top-level macOS / iOS configuration. It lets us keep the same target versions
+// and architectures across all libraries and apps.
+
+// These deployment targets are the minimum OS level we still support
+//
+// For iOS, we should make it the oldest version that has enough market share
+// and for macOS we should make it the newest version as soon as the team upgrades.
+
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
+MACOSX_DEPLOYMENT_TARGET = 10.11
+VALID_ARCHS = // Clears out the default so it appears nicer in Xcode
+
+// macOS
+VALID_ARCHS[sdk=macosx*] = x86_64
+
+// iOS: For ReleasePublic, we still keep armv7 for iPad 4
+VALID_ARCHS[sdk=iphoneos*] = arm64
+VALID_ARCHS[config=ReleasePublic][sdk=iphoneos*] = arm64 armv7
